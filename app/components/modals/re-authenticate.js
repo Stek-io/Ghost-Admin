@@ -89,7 +89,7 @@ export default ModalComponent.extend(ValidationEngine, {
             })
             .catch(() => {
                 this.toggleProperty('submitting');
-                this.set('authenticationError', 'Authentication with Stek denied or failed');
+                this.set('authenticationError', 'Authentication with Stek.io denied or failed');
             });
     },
 

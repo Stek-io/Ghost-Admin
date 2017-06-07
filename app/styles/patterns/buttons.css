@@ -151,6 +151,47 @@ fieldset[disabled] .gh-btn {
     box-shadow: none;
 }
 
+/* Stekyellow button
+/* ---------------------------------------------------------- */
+
+/* The background of the button creates 1px gradient border */
+.gh-btn-stekyellow {
+    padding: 1px;
+    border: 0;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.1);
+    fill: #fff;
+    background: linear-gradient(
+    color(var(--stekyellow) blackness(+10%)),
+    color(var(--stekyellow) l(-15%) saturation(-15%))
+    );
+    box-shadow: 0 1px 0 rgba(0,0,0,0.12);
+    transition: none !important;
+}
+
+/* The background of the span is the main visual element */
+.gh-btn-stekyellow span {
+    background: linear-gradient(
+    color(var(--stekyellow) whiteness(+5%)),
+    color(var(--stekyellow) l(-5%) saturation(-8%)) 60%,
+    color(var(--stekyellow) l(-5%) saturation(-8%)) 90%,
+    color(var(--stekyellow) l(-3%) saturation(-8%))
+    );
+    box-shadow: 0 1px 0 rgba(255,255,255,0.1) inset;
+}
+
+/* When clicked or focused with keyboard */
+.gh-btn-stekyellow:active,
+.gh-btn-stekyellow:focus {
+    background: color(var(--stekyellow) l(-20%) saturation(-15%));
+}
+.gh-btn-stekyellow:active span,
+.gh-btn-stekyellow:focus span {
+    background: color(var(--stekyellow) l(-7%) saturation(-10%));
+    box-shadow: none;
+}
+
+
 /* Green button
 /* ---------------------------------------------------------- */
 

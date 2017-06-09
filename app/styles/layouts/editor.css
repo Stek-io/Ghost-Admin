@@ -98,7 +98,7 @@
 .post-view-link svg {
     display: inline;
     height: 10px;
-    width: auto;
+    width: 10px;
     fill: var(--blue);
 }
 
@@ -237,7 +237,7 @@
     padding: 0;
 }
 
-.gh-editor-title:placeholder {
+.gh-editor-title::placeholder {
     font-weight: bold;
 }
 
@@ -282,7 +282,8 @@
 }
 
 .gh-editor-footer {
-    height: 48px;
+    height: 46px;
+    min-height: 46px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -318,6 +319,10 @@
 /* fix visible scrollbars when OSX is set to show them */
 .gh-editor .CodeMirror-scroll {
     overflow: visible !important;
+}
+
+.gh-editor .CodeMirror-scroll:hover {
+    cursor: text;
 }
 
 /* prevent markdown content showing after the preview if the preview is shorter */

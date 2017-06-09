@@ -1,15 +1,13 @@
-import Ember from 'ember';
 import Controller from 'ember-controller';
+import Ember from 'ember';
+import boundOneWay from 'ghost-admin/utils/bound-one-way';
 import computed, {alias, and, not, or, readOnly} from 'ember-computed';
 import injectService from 'ember-service/inject';
-import {htmlSafe} from 'ember-string';
-import run from 'ember-runloop';
-import {isEmberArray} from 'ember-array/utils';
-
-import {task, taskGroup} from 'ember-concurrency';
-
 import isNumber from 'ghost-admin/utils/isNumber';
-import boundOneWay from 'ghost-admin/utils/bound-one-way';
+import run from 'ember-runloop';
+import {htmlSafe} from 'ember-string';
+import {isEmberArray} from 'ember-array/utils';
+import {task, taskGroup} from 'ember-concurrency';
 
 // ember-cli-shims doesn't export this
 const {Handlebars} = Ember;
@@ -182,10 +180,10 @@ export default Controller.extend({
             // If the user's slug has changed, change the URL and replace
             // the history so refresh and back button still work
             if (slugChanged) {
-                currentPath = window.history.state.path;
+                currentPath = window.location.hash;
 
                 newPath = currentPath.split('/');
-                newPath[newPath.length - 2] = model.get('slug');
+                newPath[newPath.length - 1] = model.get('slug');
                 newPath = newPath.join('/');
 
                 window.history.replaceState({path: newPath}, '', newPath);

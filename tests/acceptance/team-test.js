@@ -1,20 +1,15 @@
 /* jshint expr:true */
-import {
-  describe,
-  it,
-  beforeEach,
-  afterEach
-} from 'mocha';
-import {expect} from 'chai';
-import startApp from '../helpers/start-app';
-import destroyApp from '../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from '../helpers/ember-simple-auth';
-import {errorOverride, errorReset} from '../helpers/adapter-error';
-import {enableGhostOAuth} from '../helpers/configuration';
-import {Response} from 'ember-cli-mirage';
-import testSelector from 'ember-test-selectors';
-import moment from 'moment';
 import ctrlOrCmd from 'ghost-admin/utils/ctrl-or-cmd';
+import destroyApp from '../helpers/destroy-app';
+import moment from 'moment';
+import startApp from '../helpers/start-app';
+import testSelector from 'ember-test-selectors';
+import {Response} from 'ember-cli-mirage';
+import {afterEach, beforeEach, describe, it} from 'mocha';
+import {authenticateSession, invalidateSession} from '../helpers/ember-simple-auth';
+import {enableGhostOAuth} from '../helpers/configuration';
+import {errorOverride, errorReset} from '../helpers/adapter-error';
+import {expect} from 'chai';
 
 describe('Acceptance: Team', function () {
     let application;
@@ -121,10 +116,12 @@ describe('Acceptance: Team', function () {
             expect(document.title, 'title after clicking user').to.equal('Team - User - Test Blog');
 
             // view title should exist and be linkable and active
-            expect(find('.view-title a[href="/ghost/team"]').hasClass('active'), 'has linkable url back to team main page')
-                .to.be.true;
+            expect(
+                find(`${testSelector('screen-title')} a[href="/ghost/team"]`).hasClass('active'),
+                'has linkable url back to team main page'
+            ).to.be.true;
 
-            await click('.view-title a');
+            await click(`${testSelector('screen-title')} a`);
 
             // url should be /team again
             expect(currentURL(), 'url after clicking back').to.equal('/team');

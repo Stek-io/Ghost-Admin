@@ -1,8 +1,8 @@
-import {expect} from 'chai';
-import {describe, it} from 'mocha';
-import {setupModelTest} from 'ember-mocha';
-import run from 'ember-runloop';
 import Pretender from 'pretender';
+import run from 'ember-runloop';
+import {describe, it} from 'mocha';
+import {expect} from 'chai';
+import {setupModelTest} from 'ember-mocha';
 
 describe('Unit: Model: invite', function() {
     setupModelTest('invite', {
@@ -14,7 +14,8 @@ describe('Unit: Model: invite', function() {
             'service:ghost-paths',
             'service:ajax',
             'service:session',
-            'service:feature'
+            'service:feature',
+            'service:tour'
         ]
     });
 

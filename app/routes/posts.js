@@ -1,9 +1,9 @@
+import $ from 'jquery';
 import AuthenticatedRoute from 'ghost-admin/routes/authenticated';
-import ShortcutsRoute from 'ghost-admin/mixins/shortcuts-route';
 import InfinityRoute from 'ember-infinity/mixins/route';
+import ShortcutsRoute from 'ghost-admin/mixins/shortcuts-route';
 import {assign} from 'ember-platform';
 import {isBlank} from 'ember-utils';
-import $ from 'jquery';
 
 export default AuthenticatedRoute.extend(InfinityRoute, ShortcutsRoute, {
     titleToken: 'Content',
@@ -54,6 +54,8 @@ export default AuthenticatedRoute.extend(InfinityRoute, ShortcutsRoute, {
             if (!isBlank(params.order)) {
                 queryParams.order = params.order;
             }
+
+            queryParams.formats = 'mobiledoc,plaintext';
 
             let perPage = this.get('perPage');
             let paginationSettings = assign({perPage, startingPage: 1}, queryParams);

@@ -1,9 +1,9 @@
-import Ember from 'ember';
+import $ from 'jquery';
 import Component from 'ember-component';
-import {htmlSafe} from 'ember-string';
+import Ember from 'ember';
 import computed, {alias, equal} from 'ember-computed';
 import injectService from 'ember-service/inject';
-import $ from 'jquery';
+import {htmlSafe} from 'ember-string';
 import {isBlank} from 'ember-utils';
 
 // ember-cli-shims doesn't export these
@@ -40,19 +40,14 @@ export default Component.extend({
 
     // HACK: this is intentionally awful due to time constraints
     // TODO: find a better way to get an excerpt! :)
-    subText: computed('post.{html,metaDescription}', function () {
-        let html = this.get('post.html');
+    subText: computed('post.{plaintext,metaDescription}', function () {
+        let text = this.get('post.plaintext');
         let metaDescription = this.get('post.metaDescription');
-        let text;
 
         if (!isBlank(metaDescription)) {
             text = metaDescription;
-        } else {
-            let $html = $(`<div>${html}</div>`);
-            text = $html.text();
         }
-
-        return htmlSafe(`${text.slice(0, 80)}&hellip;`);
+        return `${text.slice(0, 80)}...`;
     }),
 
     didReceiveAttrs() {

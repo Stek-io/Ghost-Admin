@@ -1,12 +1,11 @@
 /* eslint-disable camelcase */
 import Model from 'ember-data/model';
+import ValidationEngine from 'ghost-admin/mixins/validation-engine';
 import attr from 'ember-data/attr';
-import {hasMany} from 'ember-data/relationships';
 import computed, {equal} from 'ember-computed';
 import injectService from 'ember-service/inject';
-
+import {hasMany} from 'ember-data/relationships';
 import {task} from 'ember-concurrency';
-import ValidationEngine from 'ghost-admin/mixins/validation-engine';
 
 export default Model.extend(ValidationEngine, {
     validationType: 'user',
@@ -21,7 +20,7 @@ export default Model.extend(ValidationEngine, {
     location: attr('string'),
     accessibility: attr('string'),
     status: attr('string'),
-    language: attr('string', {defaultValue: 'en_US'}),
+    locale: attr('string'),
     metaTitle: attr('string'),
     metaDescription: attr('string'),
     lastLoginUTC: attr('moment-utc'),
@@ -36,6 +35,7 @@ export default Model.extend(ValidationEngine, {
     count: attr('raw'),
     facebook: attr('facebook-url-user'),
     twitter: attr('twitter-url-user'),
+    tour: attr('json-string'),
 
     ghostPaths: injectService(),
     ajax: injectService(),

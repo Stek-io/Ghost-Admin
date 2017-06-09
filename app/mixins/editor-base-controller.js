@@ -1,20 +1,19 @@
 import Ember from 'ember';
 import Mixin from 'ember-metal/mixin';
-import RSVP from 'rsvp';
-import computed, {alias, mapBy, reads} from 'ember-computed';
-import injectService from 'ember-service/inject';
-import injectController from 'ember-controller/inject';
-import {htmlSafe} from 'ember-string';
-import {isEmberArray} from 'ember-array/utils';
-import {isBlank} from 'ember-utils';
-import {task, timeout} from 'ember-concurrency';
 import PostModel from 'ghost-admin/models/post';
+import RSVP from 'rsvp';
 import boundOneWay from 'ghost-admin/utils/bound-one-way';
-import {isVersionMismatchError} from 'ghost-admin/services/ajax';
-import {isInvalidError} from 'ember-ajax/errors';
-
+import computed, {alias, mapBy, reads} from 'ember-computed';
 import ghostPaths from 'ghost-admin/utils/ghost-paths';
+import injectController from 'ember-controller/inject';
+import injectService from 'ember-service/inject';
 import moment from 'moment';
+import {htmlSafe} from 'ember-string';
+import {isBlank} from 'ember-utils';
+import {isEmberArray} from 'ember-array/utils';
+import {isInvalidError} from 'ember-ajax/errors';
+import {isVersionMismatchError} from 'ghost-admin/services/ajax';
+import {task, timeout} from 'ember-concurrency';
 
 const {resolve} = RSVP;
 
@@ -55,8 +54,6 @@ export default Mixin.create({
     shouldFocusEditor: false,
 
     navIsClosed: reads('application.autoNav'),
-
-    _hasChanged: false,
 
     init() {
         this._super(...arguments);
@@ -427,11 +424,13 @@ export default Mixin.create({
     },
 
     updateTitle: task(function* (newTitle) {
-        this.set('model.titleScratch', newTitle);
+        let model = this.get('model');
+
+        model.set('titleScratch', newTitle);
 
         // if model is not new and title is not '(Untitled)', or model is new and
         // has a title, don't generate a slug
-        if ((!this.get('model.isNew') || this.get('model.title')) && newTitle !== '(Untitled)') {
+        if ((!model.get('isNew') || model.get('title')) && newTitle !== '(Untitled)') {
             return;
         }
 
@@ -468,15 +467,6 @@ export default Mixin.create({
     actions: {
         updateScratch(value) {
             this.set('model.scratch', value);
-
-            // save on first change to trigger the new->edit transition
-            if (!this._hasChanged && this.get('model.isNew')) {
-                this._hasChanged = true;
-                this.send('save', {silent: true, backgroundSave: true});
-                return;
-            }
-
-            this._hasChanged = true;
 
             // save 3 seconds after last edit
             this.get('_autosave').perform();
@@ -548,18 +538,15 @@ export default Mixin.create({
             return transition.retry();
         },
 
-        updateTitle() {
+        saveTitle() {
             let currentTitle = this.get('model.title');
             let newTitle = this.get('model.titleScratch').trim();
 
-            if (currentTitle === newTitle) {
+            if (newTitle === currentTitle) {
                 return;
             }
 
-            if (this.get('model.isDraft') && !this.get('model.isNew')) {
-                // this is preferrable to setting hasDirtyAttributes to false manually
-                this.model.set('title', newTitle);
-
+            if (this.get('model.isDraft')) {
                 this.send('save', {
                     silent: true,
                     backgroundSave: true

@@ -1,19 +1,14 @@
 /* jshint expr:true */
 /* eslint-disable camelcase */
-import {
-    describe,
-    it,
-    beforeEach,
-    afterEach
-} from 'mocha';
-import {expect} from 'chai';
-import startApp from '../../helpers/start-app';
-import destroyApp from '../../helpers/destroy-app';
-import {invalidateSession, authenticateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
 import Mirage from 'ember-cli-mirage';
-import mockThemes from 'ghost-admin/mirage/config/themes';
-import testSelector from 'ember-test-selectors';
 import ctrlOrCmd from 'ghost-admin/utils/ctrl-or-cmd';
+import destroyApp from '../../helpers/destroy-app';
+import mockThemes from 'ghost-admin/mirage/config/themes';
+import startApp from '../../helpers/start-app';
+import testSelector from 'ember-test-selectors';
+import {afterEach, beforeEach, describe, it} from 'mocha';
+import {authenticateSession, invalidateSession} from 'ghost-admin/tests/helpers/ember-simple-auth';
+import {expect} from 'chai';
 
 describe('Acceptance: Settings - Design', function () {
     let application;
@@ -400,7 +395,7 @@ describe('Acceptance: Settings - Design', function () {
             expect(
                 find('.fullscreen-modal h1').text().trim(),
                 'modal title after uploading theme with warnings'
-            ).to.equal('Uploaded with warnings');
+            ).to.equal('Upload successful with warnings/errors!');
 
             expect(
                 find('.theme-validation-errors').text(),
@@ -655,6 +650,32 @@ describe('Acceptance: Settings - Design', function () {
 
             // restore default mirage handlers
             mockThemes(server);
+        });
+
+        it('can delete then re-upload the same theme', async function () {
+            server.loadFixtures('themes');
+
+            // mock theme upload to emulate uploading theme with same id
+            server.post('/themes/upload/', function ({themes}) {
+                let theme = themes.create({
+                    name: 'foo',
+                    package: {
+                        name: 'Foo',
+                        version: '0.1'
+                    }
+                });
+
+                return {themes: [theme]};
+            });
+
+            await visit('/settings/design');
+            await click(`${testSelector('theme-id', 'foo')} ${testSelector('theme-delete-button')}`);
+            await click(`.fullscreen-modal ${testSelector('delete-button')}`);
+
+            await click(testSelector('upload-theme-button'));
+            await fileUpload('.fullscreen-modal input[type="file"]', ['test'], {name: 'foo.zip', type: 'application/zip'});
+            // this will fail if upload failed because there won't be an activate now button
+            await click(`.fullscreen-modal ${testSelector('activate-now-button')}`);
         });
     });
 });

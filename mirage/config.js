@@ -64,13 +64,14 @@ export function testConfig() {
 
     /* External sites ------------------------------------------------------- */
 
-    let downloadCount = 0;
-    this.get('https://count.ghost.org/', function () {
-        downloadCount++;
-        return {
-            count: downloadCount
-        };
-    });
+    // This generates a CORS error if not hosted on ghost.org
+    // let downloadCount = 0;
+    // this.get('https://count.ghost.org/', function () {
+    //     downloadCount++;
+    //     return {
+    //         count: downloadCount
+    //     };
+    // });
 
     this.get('http://www.gravatar.com/avatar/:md5', function () {
         return '';
